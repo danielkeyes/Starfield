@@ -41,18 +41,34 @@ fun StarField(
             }
         }
 
+        // could also not offset by .2
         stars.forEach { movingStar ->
             val currentStarSize =
                 ((movingStar.getTravelPercent() / 100.0) * (starEndSize.value - starStarSize.value)).dp + starStarSize
+
+            val minAlphaPercent: Double = 20.0
+            val starAlpha = minOf(1.0, (movingStar.getTravelPercent()/100.0) + (minAlphaPercent/100) ).toFloat()
+
             Box(
                 modifier = Modifier
                     .height(currentStarSize)
                     .width(currentStarSize)
                     .offset(movingStar.currentLocation.x.dp, movingStar.currentLocation.y.dp)
                     .clip(CutCornerShape(percent = 50))
-                    .background(MaterialTheme.colors.onBackground)
+                    .background(MaterialTheme.colors.onBackground.copy(alpha = starAlpha))
             ) {
             }
+        }
+
+        // TODO could draw black box over origin to stop blinking at origin if multiple stars there
+        Box(
+            modifier = Modifier
+                .height(starStarSize)
+                .width(starStarSize)
+                .offset(stars.first().origin.x.dp, stars.first().origin.y.dp)
+                .clip(CutCornerShape(percent = 50))
+                .background(MaterialTheme.colors.background)
+        ) {
         }
     }
 }
