@@ -1,11 +1,15 @@
 package dev.danielkeyes.starfield.dataobject
 
-import java.math.RoundingMode
-import java.text.DecimalFormat
+import dev.danielkeyes.starfield.helper.toTwoDecimals
 import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/**
+ * X and Y coordinate in two dimensional space
+ * @param x x-axis value
+ * @param y y-axis value
+ */
 class Coordinate(val x: Double, val y: Double) {
     /**
      * Calculates distance to [Coordinate]
@@ -21,21 +25,7 @@ class Coordinate(val x: Double, val y: Double) {
         return false
     }
 
-    override fun toString(): String {
-        val df = DecimalFormat("#.##")
-        df.roundingMode = RoundingMode.CEILING
-        df.format(x)
-        return "(${x.format()},${y.format()})"    }
+    override fun toString() = "(${x.toTwoDecimals()},${y.toTwoDecimals()})"
 }
 
-// TODO move to better location
-/**
- * Return a string of double to two decimal places rounded to ceiling. ie. 4.232134 returns 4.23
- */
-fun Double.format(): String {
-    val df = DecimalFormat("#.##")
-    df.roundingMode = RoundingMode.CEILING
-
-    return df.format(this)
-}
 

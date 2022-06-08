@@ -1,23 +1,31 @@
 package dev.danielkeyes.starfield.dataobject
 
-import android.util.Log
-import dev.danielkeyes.starfield.LinearEquation
+import dev.danielkeyes.starfield.helper.LinearEquation
+import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 private enum class Direction {
-    left, right
+    LEFT, RIGHT
 }
 
+/**
+ * Moving star that has origin coordinate, destination coordinates, and percentage indicating
+ * how far on the path they are from the two
+ *
+ * @param origin Coordinate origin of star
+ * @param destination Coordinate of destination star will travel to
+ * @param initialOffset initial offset of start 0 to .99 percent from origin to destination
+ */
 class MovingStar(
     val origin: Coordinate,
     val destination: Coordinate,
     var initialOffset: Double = 0.0,
-    private val repeat: Boolean = true,
 ) {
     private var slope: Double = 0.0
     private var yIntercept: Double = 0.0
-    private var direction: Direction = Direction.left
+    private var direction: Direction = Direction.LEFT
     var currentLocation: Coordinate = Coordinate(origin.x, origin.y)
 
     init {
@@ -27,9 +35,9 @@ class MovingStar(
         initialOffset = initialOffset.rem(1.0)
 
         direction = if(origin.x < destination.x) {
-            Direction.right
+            Direction.RIGHT
         } else {
-            Direction.left
+            Direction.LEFT
         }
 
         travel(origin.distance(destination) * initialOffset)
@@ -42,7 +50,7 @@ class MovingStar(
      */
     fun travel( distance: Double) {
         // Could pull some of this into LinearEquation
-        val directionModifier = if (Direction.left == direction) -1 else 1
+        val directionModifier = if (Direction.LEFT == direction) -1 else 1
         val xDistance =  sqrt(distance.pow(2.0) / (1 + slope.pow(2.0)))
 
         var newX: Double = this.currentLocation.x + (directionModifier * xDistance)
@@ -62,7 +70,7 @@ class MovingStar(
      * Determines if newDestination is past MovingStars destination
      */
     private fun pastDestination(newDestination: Coordinate) : Boolean {
-        return if (direction == Direction.right) { // Right
+        return if (direction == Direction.RIGHT) { // Right
             newDestination.x > destination.x  // || newDestination.y > destination.y
         } else {
             newDestination.x < destination.x // || newDestination.y < destination.y
@@ -76,20 +84,6 @@ class MovingStar(
      */
     fun getTravelPercent(): Double {
         return ((currentLocation.x - origin.x)/(destination.x - origin.x)) * 100.0
-    }
-
-    override fun toString(): String {
-        return "MovingStar(origin=${origin.toString()}, " +
-                "destination=${destination.toString()}, " +
-                "offset=$initialOffset, " +
-                "repeat=$repeat, " +
-                "slope=$slope, " +
-                "yIntercept=$yIntercept, " +
-                "currentLocation=${currentLocation.toString()})"
-    }
-
-    fun printToLog() {
-        Log.e("MovingStar", this.toString())
     }
 }
 
@@ -112,8 +106,8 @@ fun createRandomMovingStarInCircle(radius: Double, center: Coordinate): MovingSt
 fun getRandomPointOnCircle(center: Coordinate, radius: Double): Coordinate {
     var angle = Math.random() * Math.PI * 2;
 
-    val x = (Math.cos(angle) * (radius)) + center.x;
-    val y = (Math.sin(angle) * (radius)) + center.y;
+    val x = (cos(angle) * (radius)) + center.x;
+    val y = (sin(angle) * (radius)) + center.y;
 
     return Coordinate(x, y)
 }

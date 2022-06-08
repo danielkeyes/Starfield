@@ -1,15 +1,14 @@
-package dev.danielkeyes.starfield
+package dev.danielkeyes.starfield.helper
 
 import dev.danielkeyes.starfield.dataobject.Coordinate
 
-// TODO move this class to another package
 class LinearEquation {
     companion object {
         fun calculateSlope(coordinate1: Coordinate, coordinate2: Coordinate): Double {
             return calculateSlope(coordinate1.x, coordinate1.y, coordinate2.x, coordinate2.y)
         }
 
-        fun calculateSlope(x1: Double, y1: Double, x2: Double, y2: Double,): Double {
+        private fun calculateSlope(x1: Double, y1: Double, x2: Double, y2: Double,): Double {
             // workaround for undefined
             if(x2 == x1) {
                 return 1000.0
@@ -21,7 +20,7 @@ class LinearEquation {
             return calculateYIntercept(coordinate.x, coordinate.y, slope)
         }
 
-        fun calculateYIntercept(x: Double, y: Double, slope: Double): Double {
+        private fun calculateYIntercept(x: Double, y: Double, slope: Double): Double {
             return y - (slope * x)
         }
     }
